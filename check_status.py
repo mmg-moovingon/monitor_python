@@ -69,13 +69,14 @@ def check_port_status(port):
 def count_iptables_rows():
     """Counts the number of iptables rows."""
     try:
+        # Execute the iptables command and count the lines
         result = subprocess.Popen("/usr/sbin/iptables -L | wc -l", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output, _ = result.communicate()
+
         return int(output.strip())
     except Exception as e:
         log_error("Error in count_iptables_rows: {}".format(e))
         return -1
-
 
 def check_iptables_content():
     """Checks the content of iptables rules."""
@@ -122,7 +123,7 @@ def check_test_bidder():
     try:
         # Run test_bidder.py with a timeout of 5 seconds
         result = subprocess.Popen(
-            ['python', 'test_bidder.py'],
+            ['python', './opt/monitor_python/test_bidder.py'],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
         )
@@ -228,7 +229,7 @@ def check_connectivity(host, port, timeout=5):
     """Checks if a connection can be established to a host on a given port."""
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.settimeout(timeout)
-    
+
     try:
         s.connect((host, port))
         s.shutdown(socket.SHUT_RDWR)
@@ -275,7 +276,7 @@ def generate_json_metrics(config):
         'app_last_update': lambda: file_age("/usr/share/scala/{}/lib/{}".format(folder_name, file_name)),
         'dao_log_last_update': lambda: file_age("/usr/share/scala/{}/lib/{}".format(folder_name, file_name)),
         'counters_log_last_update': lambda: file_age("/usr/share/scala/{}/log/counters.dat".format(folder_name)),
-        'pm_status': lambda: check_port_status(9898), 
+        'pm_status': lambda: check_port_status(9898),
         'aerospike_port_status': lambda: check_port_status(3000),
         'aerospike_service_status': lambda: check_service_status('aerospike'),
         'sentinel_service_status': lambda: check_service_status('sentinelone'),
@@ -295,11 +296,11 @@ def generate_json_metrics(config):
         if key in metric_functions:
             # Get the metric value from the function
             value = metric_functions[key]()
-            
+
             # If the key is not marked as 'input', include it in the output
             if not settings.get('input', False):
                 data[key] = value
-    
+
     return data
 
 
@@ -308,10 +309,10 @@ if __name__ == "__main__":
     config = load_configuration('/opt/monitor_python/conf.json')
     # Generate the metrics based on the config
     data = generate_json_metrics(config)
-    
+
     # Print the JSON data for Telegraf
     print(json.dumps(data))
-    
+
     # Write the output to status.json
     try:
         with open('/opt/monitor_python/status.json', 'w') as json_file:
