@@ -3,18 +3,6 @@
         "input": true,
         "value": "10.10.0.190"
     },
-    "win1-server": {
-        "input": true,
-        "value": "10.10.0.113"
-    },
-    "win2-server": {
-      "input": true,
-      "value": "10.10.0.238"
-    },
-    "win3-server": {
-      "input": true,
-      "value": "10.10.0.188"
-    },
     "dmp1hq-server": {
         "input": true,
         "value": "10.10.0.189"
@@ -34,12 +22,6 @@
         "input": false
     },
     "server_type": {
-        "input": false
-    },
-    "port_8080_status": {
-        "input": false
-    },
-    "test_bidder": {
         "input": false
     },
     "rsync_jsons_last_update": {
@@ -72,16 +54,13 @@
     "sentinel_service_status": {
         "input": false
     }, 
-    "pm_status": {
+    "aerospike_port_status": {
         "input": false
-    },
-    "connection_to_win1_status": {
+    },  
+    "aerospike_service_status": {
         "input": false
-    },
-    "connection_to_win2_status": {
-        "input": false
-    },
-    "connection_to_win3_status": {
+    },  
+    "win_healthcheck": {
         "input": false
     },
     "connection_to_marsai_status": {
